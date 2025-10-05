@@ -5,9 +5,8 @@
 
 Настройки InventoryUI
 > Возможность устанавливать количество слотов. Например: 5x4. <br>
-> Добавлять новые виды сортировки используя enum вместо хард-кода
 
-<img width="654" height="366" alt="{88A0C567-BB77-43D8-AC7B-1652EA462A7E}" src="https://github.com/user-attachments/assets/e37c7944-9c9f-41b9-b714-aca2d6b25d6a" />
+<img width="650" height="265" alt="{870D91CC-D1ED-434A-93B2-15031791001C}" src="https://github.com/user-attachments/assets/2063dbe1-bc5b-4a52-a876-df7b96b5f0be" />
 
 ## - Предметы
 Все предметы реализованы через ScriptableObject
