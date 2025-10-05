@@ -9,8 +9,16 @@ namespace Inventory.Logic
         public int Capacity => InventorySlots.Length;
         public event Action OnChanged;
 
+        public Dictionary<SortingType, BaseSort> Sorts;
+
         public InventoryService(int width, int height)
         {
+            Sorts = new Dictionary<SortingType, BaseSort>()
+            {
+                { SortingType.Name, new BaseSortToName()},
+                { SortingType.Type, new BaseSortToType()}
+            };
+            
             InventorySlots = new InventorySlot[width * height];
             for (var i = 0; i < InventorySlots.Length; i++)
             {
@@ -20,7 +28,7 @@ namespace Inventory.Logic
         
         public void SetItem(int index, ItemData item, int count = 1)
         {
-            if (!IsValidIndex(index)) 
+            if (IsValidIndex(index)) 
                 return;
     
             if (item == null)
@@ -37,10 +45,15 @@ namespace Inventory.Logic
 
             OnChanged?.Invoke();
         }
+        
+        public void SetItem(int index, InventorySlot slotData)
+        {
+            SetItem(index, slotData.Item, slotData.Count);
+        }
 
         public void UseItem(int index)
         {
-            if (!IsValidIndex(index))
+            if (IsValidIndex(index))
                 return;
 
             var slot = InventorySlots[index];
@@ -61,7 +74,7 @@ namespace Inventory.Logic
 
         public void DropItem(int index)
         {
-            if (!IsValidIndex(index))
+            if (IsValidIndex(index))
                 return;
     
             InventorySlots[index].Clear();
@@ -79,21 +92,8 @@ namespace Inventory.Logic
                     itemsToSort.Add((slot.Item, slot.Count));
                 }
             }
-
-            switch (sortingType)
-            {
-                case SortingType.Name:
-                    itemsToSort.Sort((a, b) => 
-                        string.Compare(a.item.name, b.item.name, StringComparison.OrdinalIgnoreCase));
-                    break;
-                case SortingType.Type:
-                    itemsToSort.Sort((a, b) => a.item.type.CompareTo(b.item.type));
-                    break;
-                case SortingType.None:
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(sortingType), sortingType, null);
-            }
+            
+            itemsToSort = Sorts[sortingType].Sort(itemsToSort);
 
             foreach (var slot in InventorySlots)
             {

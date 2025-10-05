@@ -1,4 +1,5 @@
-﻿using Inventory.Logic;
+﻿using System;
+using Inventory.Logic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -18,9 +19,8 @@ namespace Inventory.UI
         [SerializeField] private TooltipUI _tooltipUI;
         [SerializeField] private Canvas _canvas;
         [SerializeField] private TMP_Dropdown _soringDropdown;
-        [SerializeField] private SortingType[] _sortingOptions;
 
-        internal Logic.InventoryService InventoryService;
+        internal InventoryService InventoryService;
         private ItemSlotUI[] _slotUIs;
         private int? _draggedFromSlot = null;
         private bool _isDragging = false;
@@ -28,7 +28,7 @@ namespace Inventory.UI
         private void Awake()
         {
             if (InventoryService == null)
-                InventoryService = new Logic.InventoryService(_width, _height);
+                InventoryService = new InventoryService(_width, _height);
             _gridLayoutGroup.constraintCount = _width;
 
             CreateSlots();
@@ -42,13 +42,20 @@ namespace Inventory.UI
 
         private void Start()
         {
-            _soringDropdown.onValueChanged.AddListener(OnSortedItems); 
+            _soringDropdown.onValueChanged.AddListener(OnSortedItems);
+            foreach (var sort in InventoryService.Sorts)
+            {
+                _soringDropdown.options.Add(new TMP_Dropdown.OptionData(sort.Key.ToString()));
+            }
         }
 
         private void OnSortedItems(int index)
         {
-            if (index < _sortingOptions.Length)
-                InventoryService.Sorting(_sortingOptions[index]);
+            if (index >= _soringDropdown.options.Count)
+                return;
+            
+            var type =(SortingType)Enum.GetValues(typeof(SortingType)).GetValue(_soringDropdown.value);
+            InventoryService.Sorting(type);
         }
 
         private void OnDestroy()

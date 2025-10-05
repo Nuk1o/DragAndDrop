@@ -2,8 +2,7 @@
 {
     public enum SortingType
     {
-        None = 0,
-        Name = 1,
-        Type = 2,
+        Name = 0,
+        Type = 1,
     }
 }
