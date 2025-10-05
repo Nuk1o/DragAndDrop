@@ -45,11 +45,6 @@ namespace Inventory.Logic
 
             OnChanged?.Invoke();
         }
-        
-        public void SetItem(int index, InventorySlot slotData)
-        {
-            SetItem(index, slotData.Item, slotData.Count);
-        }
 
         public void UseItem(int index)
         {
