@@ -21,6 +21,7 @@ namespace Inventory.UI
         private static TooltipUI _tooltip;
 
         public event Action OnDoubleClicked;
+        public event Action OnClicked;
         public event Action<int> OnDropRequested;
         public event Action<int> OnDragStart;
         public event Action<int> OnDroppedOn; 
@@ -99,6 +100,10 @@ namespace Inventory.UI
             {
                 OnDoubleClicked?.Invoke();
             }
+            else
+            {
+                OnClicked?.Invoke();
+            }
         }
 
         public void OnBeginDrag(PointerEventData eventData)
@@ -145,6 +150,12 @@ namespace Inventory.UI
         private void OnDropButtonClicked()
         {
             OnDropRequested?.Invoke(_slotIndex);
+        }
+        
+        private void OnDestroy()
+        {
+            if (_dropButton != null)
+                _dropButton.onClick.RemoveListener(OnDropButtonClicked);
         }
     }
 }

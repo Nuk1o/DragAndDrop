@@ -13,11 +13,13 @@ namespace Inventory.UI
         [SerializeField] private int _height;
         [Space]
         [SerializeField] private ItemSlotUI _slotPrefab;
+        [SerializeField] private InfoPanelUI _infoPanelUI;
         [SerializeField] private Transform _slotsContainer;
         [SerializeField] private GridLayoutGroup _gridLayoutGroup;
         [SerializeField] private TooltipUI _tooltipUI;
         [SerializeField] private Canvas _canvas;
         [SerializeField] private TMP_Dropdown _tmpDropdown;
+        [SerializeField] private SortingType[] _sortingOptions;
 
         internal Logic.Inventory _inventory;
         private ItemSlotUI[] _slotUIs;
@@ -46,15 +48,8 @@ namespace Inventory.UI
 
         private void OnSortedItems(int index)
         {
-            switch (index)
-            {
-                case 0:
-                    _inventory.Sorting(SortingType.Name);
-                    break;
-                case 1:
-                    _inventory.Sorting(SortingType.Type);
-                    break;
-            }
+            if (index < _sortingOptions.Length)
+                _inventory.Sorting(_sortingOptions[index]);
         }
 
         private void OnDestroy()
@@ -73,6 +68,7 @@ namespace Inventory.UI
 
                 var index = i;
                 slotUI.OnDoubleClicked += () => UseItem(index);
+                slotUI.OnClicked += () => ShowInfoItem(index);
                 slotUI.OnDragStart += OnDragStart;
                 slotUI.OnDroppedOn += HandleDrop;
                 slotUI.OnDropRequested += _inventory.DropItem;
@@ -80,7 +76,17 @@ namespace Inventory.UI
                 _slotUIs[i] = slotUI;
             }
         }
-        
+
+        private void ShowInfoItem(int index)
+        {
+            var slot = _inventory.InventorySlots[index];
+            if (slot.IsEmpty)
+                return;
+            var item = slot.Item;
+            _infoPanelUI.SetInfoItem(item.icon,item.itemName,item.description);
+            _infoPanelUI.gameObject.SetActive(true);
+        }
+
         private void OnDragStart(int slot) 
         { 
             _isDragging = true; 
@@ -105,6 +111,7 @@ namespace Inventory.UI
             {
                 slotUI.UpdateDisplay();
             }
+            _infoPanelUI.gameObject.SetActive(false);
         }
 
         private void HandleDrop(int toSlotIndex)
