@@ -371,8 +371,8 @@ MonoBehaviour:
   _gridLayoutGroup: {fileID: 1146158012}
   _tooltipUI: {fileID: 1281467949}
   _canvas: {fileID: 283230054}
-  _tmpDropdown: {fileID: 1188482906}
-  _sortingOptions: 0000000001000000
+  _soringDropdown: {fileID: 1188482906}
+  _sortingOptions: 000000000100000002000000
 --- !u!1 &312920980
 GameObject:
   m_ObjectHideFlags: 0
@@ -430,7 +430,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Name
+  m_text: None
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -765,6 +765,7 @@ MonoBehaviour:
   _testItem3: {fileID: 11400000, guid: 59db9ad50b9a4164595a9140f19bf863, type: 2}
   _testItem4: {fileID: 11400000, guid: 92c1b00f36729bb44a647077eaa9bd73, type: 2}
   _testItem5: {fileID: 11400000, guid: bdf9ee58f04b134429d546c316f53d58, type: 2}
+  _testItem6: {fileID: 11400000, guid: 306a21b470c9740418a630e7d4a22385, type: 2}
   _inventoryUI: {fileID: 283230056}
 --- !u!1 &460260602
 GameObject:
@@ -1587,6 +1588,8 @@ MonoBehaviour:
   m_Value: 0
   m_Options:
     m_Options:
+    - m_Text: None
+      m_Image: {fileID: 0}
     - m_Text: Name
       m_Image: {fileID: 0}
     - m_Text: Type

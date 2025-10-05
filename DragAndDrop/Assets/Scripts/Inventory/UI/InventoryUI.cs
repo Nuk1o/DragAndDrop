@@ -1,5 +1,4 @@
-﻿using System;
-using Inventory.Logic;
+﻿using Inventory.Logic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -18,7 +17,7 @@ namespace Inventory.UI
         [SerializeField] private GridLayoutGroup _gridLayoutGroup;
         [SerializeField] private TooltipUI _tooltipUI;
         [SerializeField] private Canvas _canvas;
-        [SerializeField] private TMP_Dropdown _tmpDropdown;
+        [SerializeField] private TMP_Dropdown _soringDropdown;
         [SerializeField] private SortingType[] _sortingOptions;
 
         internal Logic.Inventory _inventory;
@@ -43,7 +42,7 @@ namespace Inventory.UI
 
         private void Start()
         {
-            _tmpDropdown.onValueChanged.AddListener(OnSortedItems); 
+            _soringDropdown.onValueChanged.AddListener(OnSortedItems); 
         }
 
         private void OnSortedItems(int index)

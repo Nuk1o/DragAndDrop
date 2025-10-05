@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Inventory.Logic
 {
@@ -87,6 +86,8 @@ namespace Inventory.Logic
                     break;
                 case SortingType.Type:
                     itemsToSort.Sort((a, b) => a.item.type.CompareTo(b.item.type));
+                    break;
+                case SortingType.None:
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(sortingType), sortingType, null);
