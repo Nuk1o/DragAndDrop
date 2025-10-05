@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Inventory.Logic
 {
@@ -62,6 +64,45 @@ namespace Inventory.Logic
                 return;
     
             InventorySlots[index].Clear();
+            OnChanged?.Invoke();
+        }
+
+        public void Sorting(SortingType sortingType)
+        {
+            var itemsToSort = new List<(ItemData item, int count)>();
+    
+            foreach (var slot in InventorySlots)
+            {
+                if (!slot.IsEmpty)
+                {
+                    itemsToSort.Add((slot.Item, slot.Count));
+                }
+            }
+
+            switch (sortingType)
+            {
+                case SortingType.Name:
+                    itemsToSort.Sort((a, b) => 
+                        string.Compare(a.item.name, b.item.name, StringComparison.OrdinalIgnoreCase));
+                    break;
+                case SortingType.Type:
+                    itemsToSort.Sort((a, b) => a.item.type.CompareTo(b.item.type));
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(sortingType), sortingType, null);
+            }
+
+            foreach (var slot in InventorySlots)
+            {
+                slot.Clear();
+            }
+
+            for (var i = 0; i < itemsToSort.Count; i++)
+            {
+                var (item, count) = itemsToSort[i];
+                InventorySlots[i].Set(item, count);
+            }
+
             OnChanged?.Invoke();
         }
     }
