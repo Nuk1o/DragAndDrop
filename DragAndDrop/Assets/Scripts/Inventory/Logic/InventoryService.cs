@@ -3,13 +3,13 @@ using System.Collections.Generic;
 
 namespace Inventory.Logic
 {
-    public class Inventory
+    public class InventoryService
     {
         public readonly InventorySlot[] InventorySlots;
         public int Capacity => InventorySlots.Length;
         public event Action OnChanged;
 
-        public Inventory(int width, int height)
+        public InventoryService(int width, int height)
         {
             InventorySlots = new InventorySlot[width * height];
             for (var i = 0; i < InventorySlots.Length; i++)
@@ -18,9 +18,9 @@ namespace Inventory.Logic
             }
         }
         
-        public void SetItemAt(int index, ItemData item, int count = 1)
+        public void SetItem(int index, ItemData item, int count = 1)
         {
-            if (index < 0 || index >= InventorySlots.Length) 
+            if (!IsValidIndex(index)) 
                 return;
     
             if (item == null)
@@ -29,16 +29,18 @@ namespace Inventory.Logic
             }
             else
             {
-                if (!item.isStackable && count > 1) count = 1;
+                if (!item.isStackable && count > 1)
+                    count = 1;
+                
                 InventorySlots[index].Set(item, count);
             }
 
             OnChanged?.Invoke();
         }
 
-        public void UsedItem(int index)
+        public void UseItem(int index)
         {
-            if (index < 0 || index >= InventorySlots.Length)
+            if (!IsValidIndex(index))
                 return;
 
             var slot = InventorySlots[index];
@@ -59,7 +61,7 @@ namespace Inventory.Logic
 
         public void DropItem(int index)
         {
-            if (index < 0 || index >= InventorySlots.Length)
+            if (!IsValidIndex(index))
                 return;
     
             InventorySlots[index].Clear();
@@ -105,6 +107,11 @@ namespace Inventory.Logic
             }
 
             OnChanged?.Invoke();
+        }
+
+        private bool IsValidIndex(int index)
+        {
+            return index < 0 || index >= InventorySlots.Length;
         }
     }
 }

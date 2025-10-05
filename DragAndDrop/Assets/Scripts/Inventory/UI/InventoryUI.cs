@@ -20,21 +20,21 @@ namespace Inventory.UI
         [SerializeField] private TMP_Dropdown _soringDropdown;
         [SerializeField] private SortingType[] _sortingOptions;
 
-        internal Logic.Inventory _inventory;
+        internal Logic.InventoryService InventoryService;
         private ItemSlotUI[] _slotUIs;
         private int? _draggedFromSlot = null;
         private bool _isDragging = false;
 
         private void Awake()
         {
-            if (_inventory == null)
-                _inventory = new Logic.Inventory(_width, _height);
+            if (InventoryService == null)
+                InventoryService = new Logic.InventoryService(_width, _height);
             _gridLayoutGroup.constraintCount = _width;
 
             CreateSlots();
             UpdateAllSlots();
 
-            _inventory.OnChanged += UpdateAllSlots;
+            InventoryService.OnChanged += UpdateAllSlots;
 
             if (_tooltipUI != null)
                 ItemSlotUI.SetTooltip(_tooltipUI);
@@ -48,29 +48,29 @@ namespace Inventory.UI
         private void OnSortedItems(int index)
         {
             if (index < _sortingOptions.Length)
-                _inventory.Sorting(_sortingOptions[index]);
+                InventoryService.Sorting(_sortingOptions[index]);
         }
 
         private void OnDestroy()
         {
-            if (_inventory != null)
-                _inventory.OnChanged -= UpdateAllSlots;
+            if (InventoryService != null)
+                InventoryService.OnChanged -= UpdateAllSlots;
         }
 
         private void CreateSlots()
         {
-            _slotUIs = new ItemSlotUI[_inventory.Capacity];
-            for (var i = 0; i < _inventory.Capacity; i++)
+            _slotUIs = new ItemSlotUI[InventoryService.Capacity];
+            for (var i = 0; i < InventoryService.Capacity; i++)
             {
                 var slotUI = Instantiate(_slotPrefab, _slotsContainer);
-                slotUI.Initialize(i, _inventory, _canvas);
+                slotUI.Initialize(i, InventoryService, _canvas);
 
                 var index = i;
                 slotUI.OnDoubleClicked += () => UseItem(index);
                 slotUI.OnClicked += () => ShowInfoItem(index);
                 slotUI.OnDragStart += OnDragStart;
                 slotUI.OnDroppedOn += HandleDrop;
-                slotUI.OnDropRequested += _inventory.DropItem;
+                slotUI.OnDropRequested += InventoryService.DropItem;
 
                 _slotUIs[i] = slotUI;
             }
@@ -78,7 +78,7 @@ namespace Inventory.UI
 
         private void ShowInfoItem(int index)
         {
-            var slot = _inventory.InventorySlots[index];
+            var slot = InventoryService.InventorySlots[index];
             if (slot.IsEmpty)
                 return;
             var item = slot.Item;
@@ -94,11 +94,11 @@ namespace Inventory.UI
 
         private void UseItem(int index)
         {
-            var slot = _inventory.InventorySlots[index];
+            var slot = InventoryService.InventorySlots[index];
             if (slot.IsEmpty)
                 return;
             Debug.Log($"Использовал {slot.Item?.name}");
-            _inventory.UsedItem(index);
+            InventoryService.UseItem(index);
         }
 
         private void UpdateAllSlots()
@@ -124,27 +124,27 @@ namespace Inventory.UI
 
             if (fromSlotIndex == toSlotIndex) return;
 
-            var fromSlot = _inventory.InventorySlots[fromSlotIndex];
-            var toSlot = _inventory.InventorySlots[toSlotIndex];
+            var fromSlot = InventoryService.InventorySlots[fromSlotIndex];
+            var toSlot = InventoryService.InventorySlots[toSlotIndex];
 
             if (fromSlot.IsEmpty) return;
 
             if (toSlot.IsEmpty)
             {
-                _inventory.SetItemAt(toSlotIndex, fromSlot.Item, fromSlot.Count);
-                _inventory.SetItemAt(fromSlotIndex, null);
+                InventoryService.SetItem(toSlotIndex, fromSlot.Item, fromSlot.Count);
+                InventoryService.SetItem(fromSlotIndex, null);
             }
             else if (toSlot.Item == fromSlot.Item && toSlot.Item.isStackable)
             {
-                _inventory.SetItemAt(toSlotIndex, toSlot.Item, toSlot.Count + fromSlot.Count);
-                _inventory.SetItemAt(fromSlotIndex, null);
+                InventoryService.SetItem(toSlotIndex, toSlot.Item, toSlot.Count + fromSlot.Count);
+                InventoryService.SetItem(fromSlotIndex, null);
             }
             else
             {
                 var tempItem = toSlot.Item;
                 var tempCount = toSlot.Count;
-                _inventory.SetItemAt(toSlotIndex, fromSlot.Item, fromSlot.Count);
-                _inventory.SetItemAt(fromSlotIndex, tempItem, tempCount);
+                InventoryService.SetItem(toSlotIndex, fromSlot.Item, fromSlot.Count);
+                InventoryService.SetItem(fromSlotIndex, tempItem, tempCount);
             }
         }
     }

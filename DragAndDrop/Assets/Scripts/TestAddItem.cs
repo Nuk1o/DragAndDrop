@@ -14,10 +14,10 @@ public class TestAddItem : MonoBehaviour
 
     private void Start()
     {
-        _inventoryUI._inventory.SetItemAt(0, _testItem, 1);
-        _inventoryUI._inventory.SetItemAt(1, _testItem2, 2);
-        _inventoryUI._inventory.SetItemAt(2, _testItem3, 1);
-        _inventoryUI._inventory.SetItemAt(8, _testItem4, 8);
-        _inventoryUI._inventory.SetItemAt(12, _testItem6, 1);
+        _inventoryUI.InventoryService.SetItem(0, _testItem, 1);
+        _inventoryUI.InventoryService.SetItem(1, _testItem2, 2);
+        _inventoryUI.InventoryService.SetItem(2, _testItem3, 1);
+        _inventoryUI.InventoryService.SetItem(8, _testItem4, 8);
+        _inventoryUI.InventoryService.SetItem(12, _testItem6, 1);
     }
 }

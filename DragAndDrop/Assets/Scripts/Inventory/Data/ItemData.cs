@@ -2,7 +2,7 @@
 
 namespace Inventory.Logic
 {
-    [CreateAssetMenu(fileName = "NewItem", menuName = "Inventory/Item")]
+    [CreateAssetMenu(fileName = "NewItem", menuName = "InventoryService/Item")]
     public class ItemData : ScriptableObject
     {
         public string itemName;

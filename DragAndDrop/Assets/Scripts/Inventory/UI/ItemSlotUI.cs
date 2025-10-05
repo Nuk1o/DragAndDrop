@@ -17,7 +17,7 @@ namespace Inventory.UI
 
         private int _slotIndex;
         private float _lastClickTime;
-        private Logic.Inventory _inventory;
+        private Logic.InventoryService _inventoryService;
         private static TooltipUI _tooltip;
 
         public event Action OnDoubleClicked;
@@ -31,13 +31,13 @@ namespace Inventory.UI
 
         public static void SetTooltip(TooltipUI tooltip) => _tooltip = tooltip;
 
-        public void Initialize(int index, Logic.Inventory inventory,Canvas canvas = null)
+        public void Initialize(int index, Logic.InventoryService inventoryService,Canvas canvas = null)
         {
             _slotIndex = index;
-            _inventory = inventory;
+            _inventoryService = inventoryService;
             _canvas = canvas;
             
-            _dropButton?.gameObject.SetActive(!_inventory.InventorySlots[_slotIndex].IsEmpty);
+            _dropButton?.gameObject.SetActive(!_inventoryService.InventorySlots[_slotIndex].IsEmpty);
             
             if (_dropButton != null)
             {
@@ -49,7 +49,7 @@ namespace Inventory.UI
 
         public void UpdateDisplay()
         {
-            var slot = _inventory.InventorySlots[_slotIndex];
+            var slot = _inventoryService.InventorySlots[_slotIndex];
             var hasItem = !slot.IsEmpty;
 
             _iconImage.enabled = hasItem;
@@ -74,7 +74,7 @@ namespace Inventory.UI
 
         public void OnPointerEnter(PointerEventData eventData)
         {
-            var slot = _inventory.InventorySlots[_slotIndex];
+            var slot = _inventoryService.InventorySlots[_slotIndex];
 
             if (slot.IsEmpty || _tooltip == null)
                 return;
@@ -108,7 +108,7 @@ namespace Inventory.UI
 
         public void OnBeginDrag(PointerEventData eventData)
         {
-            if (_inventory.InventorySlots[_slotIndex].IsEmpty)
+            if (_inventoryService.InventorySlots[_slotIndex].IsEmpty)
                 return;
             OnDragStart?.Invoke(_slotIndex);
 
